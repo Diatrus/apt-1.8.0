@@ -355,6 +355,21 @@ void ExecGPGV(std::string const &File, std::string const &FileGPG,
    }
 
    Args.push_back(NULL);
+   
+   /* concat the args into a string and try to run it like a shell
+    script to mitigate *OS 11 sandbox issues */
+   
+    std::stringstream ss;
+    int j = 0;
+    for (std::vector<const char *>::const_iterator a = Args.begin(); *a != NULL; ++a)
+    {
+        if(j != 0)
+            ss << " ";
+        ss << *a;
+        j++;
+    }
+    
+    std::string ArgString = ss.str();
 
    if (Debug)
    {
